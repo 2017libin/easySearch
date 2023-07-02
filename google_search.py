@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 
 
 def get_domain(subdomain: str) -> list:
-    top = ['cn', 'org', 'com', 'edu']
+    top = ['cn', 'org', 'com', 'edu', 'gov']
     tmp = subdomain.split('.')
     ret = []
     while tmp:
@@ -33,17 +33,15 @@ def _google_search_internal(dork: str, start: int, num: int):
 def googleSearch(input_file: str, output_file: str):
     with open(input_file, "r", encoding="utf-8") as fp:
         for dork in fp:
-            if dork.strip():
-                ret = _google_search_internal(dork.strip(), 0, 10)
-        # for t in ret:
-        #     print(t)
-        with open(output_file, "w", encoding="utf-8") as fp:
-            for line in ret:
-                fp.write(line + '\n')
-
+            try:
+                print(f'[+] 搜索 {dork}', end='')
+                if dork.strip():
+                    ret = _google_search_internal(dork.strip(), 0, 10)
+                with open(output_file, "a+", encoding="utf-8") as fp:
+                    for line in ret:
+                        fp.write(line + '\n')
+            except Exception as e:
+                print(e)
 
 if __name__ == "__main__":
     fire.Fire(googleSearch)
-    # print(GoogleSearch("百度", 10))
-    # print("test")
-    # test("site:edu.cn 深圳", 0, 10)
